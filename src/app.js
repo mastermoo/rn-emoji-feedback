@@ -1,7 +1,13 @@
 import React from 'react';
 import { PixelRatio, StyleSheet, Text, View, PanResponder, Animated, TouchableOpacity } from 'react-native';
 
-const REACTIONS = ["Terrible", "Bad", "Okay", "Good", "Great"];
+const REACTIONS = [
+  { label: "Worried", src: require('./assets/worried.png'), bigSrc: require('./assets/worried_big.png') },
+  { label: "Sad", src: require('./assets/sad.png'), bigSrc: require('./assets/sad_big.png') },
+  { label: "Strong", src: require('./assets/ambitious.png'), bigSrc: require('./assets/ambitious_big.png') },
+  { label: "Happy", src: require('./assets/smile.png'), bigSrc: require('./assets/smile_big.png') },
+  { label: "Surprised", src: require('./assets/surprised.png'), bigSrc: require('./assets/surprised_big.png') },
+];
 const WIDTH = 320;
 const DISTANCE =  WIDTH / REACTIONS.length;
 const END = WIDTH - DISTANCE;
@@ -9,7 +15,7 @@ const END = WIDTH - DISTANCE;
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this._pan = new Animated.Value(0);
+    this._pan = new Animated.Value(2 * DISTANCE);
   }
 
   componentWillMount() {
@@ -45,7 +51,7 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <View style={styles.wrap}>
           <Text style={styles.welcome}>
-            How was the help you received?
+            How are you feeling?
           </Text>
           
           <View style={styles.line} />
@@ -76,15 +82,18 @@ export default class App extends React.Component {
               return (
                 <TouchableOpacity onPress={() => this.updatePan(u)} activeOpacity={0.9} key={idx}>
                   <View style={styles.smileyWrap}>
-                    <Animated.View style={[styles.smiley, {
-                      transform: [{
-                        scale: this._pan.interpolate({
-                          inputRange,
-                          outputRange: scaleOutputRange,
-                          extrapolate: 'clamp',
-                        })
-                      }]
-                    }]} />
+                    <Animated.Image
+                      source={reaction.src}
+                      style={[styles.smiley, {
+                        transform: [{
+                          scale: this._pan.interpolate({
+                            inputRange,
+                            outputRange: scaleOutputRange,
+                            extrapolate: 'clamp',
+                          })
+                        }]
+                      }]}
+                    />
                   </View>
 
                   <Animated.Text style={[styles.reactionText, {
@@ -99,16 +108,12 @@ export default class App extends React.Component {
                       extrapolate: 'clamp',
                     })
                   }]}>
-                    {reaction}
+                    {reaction.label}
                   </Animated.Text>
                 </TouchableOpacity>
               );
             })}
             <Animated.View {...this._panResponder.panHandlers} style={[styles.bigSmiley, {
-              backgroundColor: this._pan.interpolate({
-                inputRange: [0, 2*DISTANCE, END],
-                outputRange: ['#ffb18d', '#ffd885', '#ffd885'],
-              }),
               transform: [{
                 translateX: this._pan.interpolate({
                   inputRange: [0, END],
@@ -116,7 +121,35 @@ export default class App extends React.Component {
                   extrapolate: 'clamp',
                 })
               }]
-            }]} />
+            }]}>
+              {REACTIONS.map((reaction, idx) => {
+                let inputRange = [(idx-1)*DISTANCE, idx*DISTANCE, (idx+1)*DISTANCE];
+                let outputRange = [0, 1, 0];
+
+                if (idx == 0) {
+                  inputRange = [idx*DISTANCE, (idx+1)*DISTANCE];
+                  outputRange = [1, 0];
+                }
+
+                if (idx == REACTIONS.length - 1) {
+                  inputRange = [(idx-1)*DISTANCE, idx*DISTANCE];
+                  outputRange = [0, 1];
+                }
+                return (
+                  <Animated.Image
+                    key={idx}
+                    source={reaction.bigSrc}
+                    style={[styles.bigSmileyImage, {
+                      opacity: this._pan.interpolate({
+                        inputRange,
+                        outputRange,
+                        extrapolate: 'clamp',
+                      })
+                    }]}
+                  />
+                );
+              })}
+            </Animated.View>
           </View>
         </View>
       </View>
@@ -167,6 +200,13 @@ const styles = StyleSheet.create({
     height: DISTANCE,
     borderRadius: DISTANCE/2,
     backgroundColor: '#ffb18d',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  bigSmileyImage: {
+    width: DISTANCE,
+    height: DISTANCE,
     position: 'absolute',
     top: 0,
     left: 0,
