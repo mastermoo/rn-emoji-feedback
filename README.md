@@ -20,9 +20,7 @@ To see it in action: [Vimeo](https://vimeo.com/182213096) or [Article](https://m
 
 # Try it out
 
-1. Clone the repo
-2. Run `npm install`.
-3. Open `ios/rating.xcodeproj` and run the project.
+Thanks to [@brentvatne](https://github.com/brentvatne), you can try it out at [Exponent](https://getexponent.com/@community/emoji-feedback).
 
 
 # Author
