@@ -1,0 +1,8 @@
+{
+  "exponentServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 5985,
+  "exponentServerNgrokUrl": "https://nj-wjp.community.rn-emoji-feedback.exp.direct",
+  "packagerNgrokUrl": "https://packager.nj-wjp.community.rn-emoji-feedback.exp.direct",
+  "ngrokPid": 6002
+}

@@ -6,7 +6,10 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
-    "react": "^15.3.0",
-    "react-native": "^0.32.0"
-  }
+    "react": "15.3.1",
+    "react-native": "github:exponentjs/react-native#sdk-10.0.0",
+    "@exponent/vector-icons": "^1.0.1",
+    "exponent": "^10.0.0"
+  },
+  "main": "main.js"
 }
